@@ -1,6 +1,6 @@
 
 # This is a basic workflow to help you get started with Actions
-name: DeploySampleApp
+name: Deploy Sample App
 env:
   RESOURCE_GROUP: 'aksrunners-rg'
   CLUSTER_NAME: 'aksrunners-aks'

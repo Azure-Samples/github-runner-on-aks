@@ -1,4 +1,4 @@
-name: Create and publish a new runner image to ghcr
+name: Build and Publish a runner image to ghcr
 
 on:
   # Allows you to run this workflow manually from the Actions tab
