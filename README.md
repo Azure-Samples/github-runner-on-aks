@@ -1,57 +1,62 @@
-# Project Name
+---
+page_type: sample
+languages:
+- bicep
+- dockerfile
+products:
+- azure-kubernetes-service
+- github
+- github actions
+---
 
-(short, 1-3 sentenced, description of the project)
+
+# Self-Hosted GitHub Actions Runner On AKS (Azure Kubernetes Service) with auto-scale option
+
+This repo will demo shortly how you can connect to your github account a self-hosted runner which deployed on Azure Kubernetes Service (AKS) with autp-scale option - which provide an ability to handle successfully many github action job requests in parallel.
+This project include the following: 
+- Bicep deployment, which responsible to following tasks:
+  - AKS deployment
+  - Install [GitHub Actions Runner Controller (ARC)](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md) on AKS with auto-scale configuration
+- Deploying sample app using the installed self-hosted runner to AKS cluster without keeping Azure password in Github account
+
+## Simple Diagram of End State
+After deployment, the outcome will be:
+![alt text](image/sketch.png)
 
 ## Features
 
 This project framework provides the following features:
 
-* Feature 1
-* Feature 2
-* ...
+* Self-Hosted GitHub Action Runner over AKS
+* Auto-Scale Github Action runner based on 'waiting number of jobs in the queue' metric
 
 ## Getting Started
 
 ### Prerequisites
 
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
+- Fork this repo to your github account
+- In the forked repo [Configure OpenID Connect in Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux). After completing the instructions, the following sevrets should be created in your repo secrets: AZURE_CLIENT_ID, AZURE_SUBSCRIPTION_ID, AZURE_TENANT_ID
+- Create additional GitHub Secrets in the repo: 
+  - name: SSH_PUBLIC_KEY, value: [public key of ssh key which will be used during AKS creation]
+  - name: RUNNER_TOKEN, value: Create a new personal access token by login with a GitHub account that has admin privileges for your repo, and [create a PAT](https://github.com/settings/tokens/new) with the appropriate scopes - for this sample:
+  -  repo (Full Control)
+  -  write:packages
 
 ### Installation
 
-(ideally very short)
+Follow this instructions:
 
-- npm install [package name]
-- mvn install
-- ...
-
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
-
+- Execute the Github Action - [Build and Publish a runner image to ghcr](.github/workflows/buildImage.yaml)
+- Go to [actions-runner-controller](runner/actions-runner-controller.yaml), replace ```ghcr.io/yaronpri/githubrunneronaks:main``` with the full image name from previous step, this step is necessary in order to use a GitHub runner image with Azure CLI and kubectl as part of the image 
+- Execute the GitHub Action - [IaC deployment](.github/workflows/deployIaC.yaml)
 
 ## Demo
 
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
+In order to test the auto-scale of the runners, execute several times the GitHub Action - [Deploy Sample App](.github/workflows/deployApp.yaml)
+You will notice that after a while, a new runners are being added and able to pull the newly created jobs and process all of them in parallel
 
 ## Resources
 
-(Any additional resources or related projects)
+- Read more about GitHub Actions Runner Controller (ARC) [here](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md)
+- Read more how to change runner default image in [this](https://freshbrewed.science/2021/12/01/gh-actions.html) great blog
 
-- Link to supporting information
-- Link to similar sample
-- ...
