@@ -1,4 +1,4 @@
-# Project Name
+# Self-Hosted GitHub Actions Runner On AKS (Azure Kubernetes Service) with auto-scale option
 
 (short, 1-3 sentenced, description of the project)
 
