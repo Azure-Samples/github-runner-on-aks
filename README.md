@@ -1,5 +1,6 @@
 ---
 page_type: sample
+description: Learn how to deploy self-hosted GitHub Actions Runners on AKS (Azure Kubernetes Service)
 languages:
 - bicep
 - dockerfile
