@@ -1,0 +1,59 @@
+
+# This is a basic workflow to help you get started with Actions
+name: DeployRunnerAKS
+env:
+  RESOURCE_GROUP: 'aksrunners-rg'
+  CLUSTER_NAME: 'aksrunners-aks'
+  ADMIN_USERNAME: 'aksadmin'
+  REGION: 'westeurope'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: "${{ github.repository }}"
+# Controls when the action will run. 
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  push:
+    branches: 
+      - main
+    paths: 
+      - 'infra/**' 
+      - 'runner/**'
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code 
+      uses: actions/checkout@v3
+    - name: 'Az CLI login'
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        scope: subscription
+        region: ${{ env.REGION }}
+        template: ./infra/main.bicep
+        parameters: resourcegroup="${{ env.RESOURCE_GROUP }}" aksclustername="${{ env.CLUSTER_NAME }}" adminusername="${{ env.ADMIN_USERNAME }}" sshpublickey="${{ secrets.SSH_PUBLIC_KEY }}"
+        failOnStdErr: false
+    - name: Set AKS context
+      id: set-context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: '${{ env.RESOURCE_GROUP }}' 
+        cluster-name: '${{ env.CLUSTER_NAME }}'
+    - name: Install Runner
+      run: |
+          kubectl apply -f ./runner/cert-manager.yaml 
+          kubectl create -f ./runner/actions-runner-controller.yaml 
+          kubectl create secret generic controller-manager  -n actions-runner-system --from-literal=github_token=${{ secrets.RUNNER_TOKEN }}
+          sleep 90
+          kubectl apply -f ./runner/runnerdeployment.yaml 
+          kubectl apply -f ./runner/hra-scaler.yaml
