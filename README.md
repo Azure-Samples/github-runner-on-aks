@@ -7,7 +7,6 @@ languages:
 products:
 - azure-kubernetes-service
 - github
-- github actions
 ---
 
 
