@@ -35,7 +35,7 @@ This project framework provides the following features:
 ### Prerequisites
 
 - Fork this repo to your github account
-- In the forked repo [Configure OpenID Connect in Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux). After completing the instructions, the following sevrets should be created in your repo secrets: AZURE_CLIENT_ID, AZURE_SUBSCRIPTION_ID, AZURE_TENANT_ID
+- In the forked repo [Configure OpenID Connect in Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux). After completing the instructions, the following secrets should be created in your repo secrets: AZURE_CLIENT_ID, AZURE_SUBSCRIPTION_ID, AZURE_TENANT_ID
 - Create additional GitHub Secrets in the repo: 
   - name: SSH_PUBLIC_KEY, value: [public key of ssh key which will be used during AKS creation]
   - name: RUNNER_TOKEN, value: Create a new personal access token by login with a GitHub account that has admin privileges for your repo, and [create a PAT](https://github.com/settings/tokens/new) with the appropriate scopes - for this sample:
