@@ -12,7 +12,7 @@ products:
 
 # Self-Hosted GitHub Actions Runner On AKS (Azure Kubernetes Service) with auto-scale option
 
-This repo will demo shortly how you can connect to your github account a self-hosted runner which deployed on Azure Kubernetes Service (AKS) with autp-scale option - which provide an ability to handle successfully many github action job requests in parallel.
+This repo will demo shortly how you can connect to your github account a self-hosted runner which deployed on Azure Kubernetes Service (AKS) with auto-scale option - which provide an ability to handle successfully many github action job requests in parallel.
 This project include the following: 
 - Bicep deployment, which responsible to following tasks:
   - AKS deployment
@@ -47,8 +47,35 @@ This project framework provides the following features:
 Follow this instructions:
 
 - Execute the Github Action - [Build and Publish a runner image to ghcr](.github/workflows/buildImage.yaml)
-- Go to [actions-runner-controller](runner/actions-runner-controller.yaml), replace ```ghcr.io/yaronpri/githubrunneronaks:main``` with the full image name from previous step, this step is necessary in order to use a GitHub runner image with Azure CLI and kubectl as part of the image 
+- Go to [actions-runner-controller](runner/actions-runner-controller.yaml), replace ```ghcr.io/yaronpri/githubrunneronaks:main``` with the full image name from previous step, this step is necessary in order to use a GitHub runner image with Azure CLI and kubectl as part of the image
+- Go to [hra-scaler](runner/hra-scaler.yaml), replace `GithubRunnerOnAKS` with your repository name
 - Execute the GitHub Action - [IaC deployment](.github/workflows/deployIaC.yaml)
+
+#### Using images from private repository
+
+When using private images, the `RunnerDeployment` will not be able to pull your image.
+To use a private registry (e.g ghcr.io with visibility set to private) add the following:
+
+- Go to [IaC deployment](.github/workflows/deployIaC.yaml) and add the following:
+
+```bash
+# When using private registry, we need to create a secret for that as well
+kubectl create secret docker-registry runnersecret \
+  --docker-server=https://${{ env.REGISTRY }}/ \
+  --docker-username=${{ github.repository }} \
+  --docker-password=${{ secrets.RUNNER_TOKEN }}
+```
+
+- Go to [runnerdeployment](runner/runnerdeployment.yaml) and append:
+
+```yml
+    spec:
+      repository: yaronpri/GithubRunnerOnAKS
+      #organization: <YOUR ORG NAME IF WANT TO WORK AT ORG LEVEL> 
+      image: ghcr.io/yaronpri/GithubRunnerOnAKS:<tag>
+      imagePullSecrets:
+      - name: runnersecret
+```
 
 ## Demo
 
