@@ -51,9 +51,9 @@ Follow this instructions:
 - Go to [hra-scaler](runner/hra-scaler.yaml), replace `GithubRunnerOnAKS` with your repository name
 - Execute the GitHub Action - [IaC deployment](.github/workflows/deployIaC.yaml)
 
-#### Using images from private repository
+#### Using images from private registry
 
-When using private images, the `RunnerDeployment` will not be able to pull your image.
+When using private images, the `RunnerDeployment` will not be able to pull your image.  
 To use a private registry (e.g ghcr.io with visibility set to private) add the following:
 
 - Go to [IaC deployment](.github/workflows/deployIaC.yaml) and add the following:
