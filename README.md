@@ -16,7 +16,7 @@ This repo will demo shortly how you can connect to your github account a self-ho
 This project include the following: 
 - Bicep deployment, which responsible to following tasks:
   - AKS deployment
-  - Install [GitHub Actions Runner Controller (ARC)](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md) on AKS with auto-scale configuration
+  - Install [GitHub Actions Runner Controller (ARC)](https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md) on AKS with auto-scale configuration
 - Deploying sample app using the installed self-hosted runner to AKS cluster without keeping Azure password in Github account
 
 ## Simple Diagram of End State
