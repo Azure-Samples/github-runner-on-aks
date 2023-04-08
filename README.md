@@ -27,7 +27,7 @@ After deployment, the outcome will be:
 
 This project framework provides the following features:
 
-* Self-Hosted GitHub Action Runner over AKS
+* Self-Hosted GitHub Actions Runner over AKS
 * Auto-Scale Github Action runner based on 'waiting number of jobs in the queue' metric
 
 ## Getting Started
