@@ -10,7 +10,7 @@ on:
       - 'Dockerfile' 
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: myacrp101.azurecr.io
   IMAGE_NAME: "${{ github.repository }}"
 
 jobs:
